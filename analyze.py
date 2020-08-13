@@ -44,3 +44,5 @@ data = data.groupby('Date').agg('sum')
 
 print(data.tail())	
 
+print(data.agg('sum'))
+
