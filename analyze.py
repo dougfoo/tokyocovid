@@ -1,8 +1,8 @@
 import pandas as pd
+import myconfig as cfg
 
-TKCOVID_FILENAME = "tokyocovid_latest.csv"
+data = pd.read_csv(cfg.TKCOVID_FILENAME)
 
-data = pd.read_csv(TKCOVID_FILENAME)
 
 print(data.head())
 

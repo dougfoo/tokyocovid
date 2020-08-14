@@ -3,9 +3,10 @@
 import pandas as pandas
 import requests as req
 import datetime
+import myconfig as cfg
 import os
 
-TKCOVID_FILENAME = "tokyocovid_latest.csv"
+TKCOVID_FILENAME = cfg.TKCOVID_FILENAME
 
 res = req.request(method='HEAD', url='https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv')
 if (res.ok):
@@ -31,7 +32,7 @@ if (res.ok):
         with open(TKCOVID_FILENAME, 'wb') as fd:
             for chunk in res.iter_content(1024):
                 fd.write(chunk)
-                
+
     else:
         print('false retry later')
 
