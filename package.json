@@ -1,0 +1,27 @@
+{
+  "name": "tokyocovid",
+  "version": "1.0.0",
+  "description": "Some silly automation of tokyo covid data for AWS play",
+  "main": "index.js",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "react-scripts test",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dougfoo/tokyocovid.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dougfoo/tokyocovid/issues"
+  },
+  "homepage": "https://github.com/dougfoo/tokyocovid#readme"
+}
