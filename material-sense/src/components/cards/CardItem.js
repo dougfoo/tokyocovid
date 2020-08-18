@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import withStyles from '@material-ui/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Avatar from '@material-ui/core/Avatar';
-import DescriptionIcon from '@material-ui/icons/Description';
-import ButtonBar from '../buttons/ButtonBar';
 
 const styles = theme => ({
   paper: {

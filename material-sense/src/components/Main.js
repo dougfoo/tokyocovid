@@ -6,9 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import InstructionDialog from "./dialogs/InstructionDialog";
-import SwipeDialog from "./dialogs/SwipeDialog";
-
+import SimpleLineChart from "./SimpleLineChart";
 import Topbar from "./Topbar";
 
 const backgroundShape = require("../images/shape.svg");
@@ -115,6 +113,18 @@ class Main extends Component {
   };
 
   render() {
+    const data = [
+      {
+        name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
+      },
+      {
+        name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
+      },
+      {
+        name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
+      },
+    ];
+  
     const { classes } = this.props;
     return (
       <React.Fragment>
@@ -195,8 +205,11 @@ class Main extends Component {
                             Chart 1
                           </Typography>
                           <Typography variant="body1" gutterBottom>
-                            This needs to be a flex height box
+                            This is another graph
                           </Typography>
+                        </div>
+                        <div>
+                          <SimpleLineChart data={data} />
                         </div>
                       </div>
                     </Paper>
@@ -209,8 +222,11 @@ class Main extends Component {
                             Chart 2
                           </Typography>
                           <Typography variant="body1" gutterBottom>
-                          This needs to be a flex height box
+                          This will be some graph
                           </Typography>
+                        </div>
+                        <div>
+                          <SimpleLineChart data={data} />
                         </div>
                       </div>
                     </Paper>
