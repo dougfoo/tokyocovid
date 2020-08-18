@@ -95,10 +95,10 @@ const styles = theme => ({
 class Main extends Component {
   state = {
     learnMoredialog: false,
-    getStartedDialog: false
+    getStartedDialog: false,
+    dailyData: [],
+    dailyTrend: []
   };
-
-  componentDidMount() {}
 
   openDialog = event => {
     this.setState({ learnMoredialog: true });
@@ -116,6 +116,22 @@ class Main extends Component {
     this.setState({ getStartedDialog: false });
   };
 
+  componentDidMount() {
+    fetch("dailyData.json")
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      this.setState({ ...this.state, dailyData: data })
+    });
+    fetch("dailyTrend.json")
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      this.setState({ ...this.state, dailyTrend: data })
+    });
+
+  }
+
   render() {
     const demoData = [
       { name: 'M/F', m: 4000, f: 2400, },
@@ -123,25 +139,6 @@ class Main extends Component {
       { name: 'Tokyo / Ex', tk: 2000, ex:
        9800, },
     ];
-
-    const dailyTrend = [
-      { name: 'Aug 12', tk: 330, os: 140, },
-      { name: 'Aug 13', tk: 210, os: 180, },
-      { name: 'Aug 14', tk: 150, os: 150, },
-      { name: 'Aug 15', tk: 288, os: 190, },
-      { name: 'Yesterday', tk: 313, os: 139, },
-      { name: 'Today', tk: 188, os: 198, },
-    ];
-
-    const dailyData = 
-      { 
-        'NewTokyoCase': 315,
-        'TokyoCase': 1525,
-        'NewJapanCase': 1231,
-        'NewJapanDeath': 131,
-        'JapanCase': 51242,
-        'JapanDeath': 3432
-      };    
 
     const { classes } = this.props;
     return (
@@ -151,48 +148,70 @@ class Main extends Component {
         <div className={classes.root}>
           <Grid container justify="center">
             <Grid spacing={2} alignItems="center" justify="center" container className={classes.grid}>
-              <Grid item xs={12} md={2}>
+              <Grid item xs={4} md={2}>
                 <Paper className={classes.paper}>
                   <div className={classes.box}>
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
                       New Cases Tokyo
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                    {dailyData['NewTokyoCase']} - (delta ^)
+                    {this.state.dailyData['NewTokyoCase']} +/- ?
                     </Typography>
                   </div>
                 </Paper>
               </Grid>
-              <Grid item xs={12} md={2}>
+              <Grid item xs={4} md={2}>
                 <Paper className={classes.paper}>
                   <div className={classes.box}>
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
                     Total Open Tokyo
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                    {dailyData['TokyoCase']}
+                    {this.state.dailyData['TokyoCase']}
                     </Typography>
                   </div>
                 </Paper>
               </Grid>
-              <Grid item xs={12} md={2}>
+              <Grid item xs={4} md={2}>
                 <Paper className={classes.paper}>
                   <div className={classes.box}>
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                    All Japan
+                    Japan Total Cases
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      New Cases: {dailyData['NewJapanCase']} <br/>
-                      New Deaths: {dailyData['NewJapanDeath']} <br/>
-                      Total Cases: {dailyData['JapanCase']} <br/>
-                      Total Deaths: {dailyData['JapanDeath']} <br/>
+                     {this.state.dailyData['JapanCase']} <br/>
+                    </Typography>
+                  </div>
+                </Paper>
+              </Grid>
+              <Grid item xs={4} md={2}>
+                <Paper className={classes.paper}>
+                  <div className={classes.box}>
+                    <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
+                    Japan Daily New Cases
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      {this.state.dailyData['NewJapanCase']} <br/>
+                    </Typography>
+                  </div>
+                </Paper>
+              </Grid>
+              <Grid item xs={4} md={2}>
+                <Paper className={classes.paper}>
+                  <div className={classes.box}>
+                    <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
+                    Death Watch
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      New Deaths: TBA <br/>
+                      Total Deaths: TBA <br/>
                     </Typography>
                   </div>
                 </Paper>
               </Grid>
               <Grid container item xs={12}>
                 <Grid spacing={4} alignItems="center" justify="center" container className={classes.grid}>
-                  <Grid item xs={8}>
+                  <Grid item xs={12}>
                     <Paper className={classes.paper}>
                       <div>
                         <div className={classes.box}>
@@ -205,7 +224,7 @@ class Main extends Component {
                         </div>
                         <div>
                           <ResponsiveContainer width="99%" height={225}>
-                            <LineChart width={600} height={300} data={dailyTrend}
+                            <LineChart width={600} height={300} data={this.state.dailyTrend}
                               margin={{
                                 top: 5, right: 5, left: 5, bottom: 5,
                               }}
@@ -215,20 +234,19 @@ class Main extends Component {
                               <YAxis />
                               <Tooltip />
                               <Legend />
-                              <Line type="monotone" dataKey="tk" stroke="#8884d8" activeDot={{ r: 8 }} />
-                              <Line type="monotone" dataKey="os" stroke="#82ca9d" />
+                              <Line type="monotone" dataKey="tok" stroke="#8884d8" activeDot={{ r: 8 }} />
                             </LineChart>                            
                           </ResponsiveContainer>
                         </div>
                       </div>
                     </Paper>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={12}>
                     <Paper className={classes.paper}>
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                            Demographics
+                            Demographics (WIP)
                           </Typography>
                           <Typography variant="body1" gutterBottom>
                           Gender, Age, Tokyo vs Japan
