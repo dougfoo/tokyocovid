@@ -3,11 +3,11 @@ import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import { withTheme } from '@material-ui/styles';
 
-function SimpleLineChart(props) {
+function SimpleReactiveChart(props) {
   const { data } = props;
   return (
     <ResponsiveContainer width="99%" height={225}>
- <BarChart
+     <BarChart
         width={500}
         height={300}
         data={data}
@@ -20,11 +20,15 @@ function SimpleLineChart(props) {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="pv" fill="#8884d8" />
-        <Bar dataKey="uv" fill="#82ca9d" />
+        <Bar dataKey="m" fill="#8884d8" />
+        <Bar dataKey="f" fill="#82ca9d" />
+        <Bar dataKey="yg" fill="#0804d8" />
+        <Bar dataKey="old" fill="#028a9d" />
+        <Bar dataKey="tk" fill="#888408" />
+        <Bar dataKey="ex" fill="#82ca0d" />
       </BarChart>
     </ResponsiveContainer>
   );
 }
 
-export default withTheme(SimpleLineChart);
+export default withTheme(SimpleReactiveChart);

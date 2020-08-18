@@ -6,8 +6,12 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import SimpleLineChart from "./SimpleLineChart";
 import Topbar from "./Topbar";
+import SimpleReactiveChart from "./SimpleReactiveChart";
+import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+} from 'recharts';
 
 const backgroundShape = require("../images/shape.svg");
 
@@ -113,18 +117,32 @@ class Main extends Component {
   };
 
   render() {
-    const data = [
-      {
-        name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
-      },
-      {
-        name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
-      },
-      {
-        name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
-      },
+    const demoData = [
+      { name: 'M/F', m: 4000, f: 2400, },
+      { name: 'Age <> 40', yg: 3000, old: 1398, },
+      { name: 'Tokyo / Ex', tk: 2000, ex:
+       9800, },
     ];
-  
+
+    const dailyTrend = [
+      { name: 'Aug 12', tk: 330, os: 140, },
+      { name: 'Aug 13', tk: 210, os: 180, },
+      { name: 'Aug 14', tk: 150, os: 150, },
+      { name: 'Aug 15', tk: 288, os: 190, },
+      { name: 'Yesterday', tk: 313, os: 139, },
+      { name: 'Today', tk: 188, os: 198, },
+    ];
+
+    const dailyData = 
+      { 
+        'NewTokyoCase': 315,
+        'TokyoCase': 1525,
+        'NewJapanCase': 1231,
+        'NewJapanDeath': 131,
+        'JapanCase': 51242,
+        'JapanDeath': 3432
+      };    
+
     const { classes } = this.props;
     return (
       <React.Fragment>
@@ -140,19 +158,7 @@ class Main extends Component {
                       New Cases Tokyo
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      Blah blah blah <br /> Today vs Yesterday
-                    </Typography>
-                  </div>
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={2}>
-                <Paper className={classes.paper}>
-                  <div className={classes.box}>
-                    <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                      New Deaths Tokyo
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      Blah blah blah <br /> Today vs Yesterday
+                    {dailyData['NewTokyoCase']} - (delta ^)
                     </Typography>
                   </div>
                 </Paper>
@@ -164,7 +170,7 @@ class Main extends Component {
                     Total Open Tokyo
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      Blah blah blah <br /> Today vs Yesterday
+                    {dailyData['TokyoCase']}
                     </Typography>
                   </div>
                 </Paper>
@@ -173,24 +179,13 @@ class Main extends Component {
                 <Paper className={classes.paper}>
                   <div className={classes.box}>
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                    Total Deaths Tokyo
+                    All Japan
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      Blah blah blah <br /> Today vs Yesterday
-                    </Typography>
-                  </div>
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={2}>
-                <Paper className={classes.paper}>
-                  <div className={classes.box}>
-                    <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                    For All of Japan
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      New Cases <br/>
-                      Total Open Cases <br/>
-                      Total Deaths
+                      New Cases: {dailyData['NewJapanCase']} <br/>
+                      New Deaths: {dailyData['NewJapanDeath']} <br/>
+                      Total Cases: {dailyData['JapanCase']} <br/>
+                      Total Deaths: {dailyData['JapanDeath']} <br/>
                     </Typography>
                   </div>
                 </Paper>
@@ -202,14 +197,28 @@ class Main extends Component {
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                            Chart 1
+                            Daily New Case Counts
                           </Typography>
                           <Typography variant="body1" gutterBottom>
-                            This is another graph
+                            (Tokyo tk, Osaka os)
                           </Typography>
                         </div>
                         <div>
-                          <SimpleLineChart data={data} />
+                          <ResponsiveContainer width="99%" height={225}>
+                            <LineChart width={600} height={300} data={dailyTrend}
+                              margin={{
+                                top: 5, right: 5, left: 5, bottom: 5,
+                              }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis dataKey="name" />
+                              <YAxis />
+                              <Tooltip />
+                              <Legend />
+                              <Line type="monotone" dataKey="tk" stroke="#8884d8" activeDot={{ r: 8 }} />
+                              <Line type="monotone" dataKey="os" stroke="#82ca9d" />
+                            </LineChart>                            
+                          </ResponsiveContainer>
                         </div>
                       </div>
                     </Paper>
@@ -219,14 +228,14 @@ class Main extends Component {
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                            Chart 2
+                            Demographics
                           </Typography>
                           <Typography variant="body1" gutterBottom>
-                          This will be some graph
+                          Gender, Age, Tokyo vs Japan
                           </Typography>
                         </div>
                         <div>
-                          <SimpleLineChart data={data} />
+                          <SimpleReactiveChart data={demoData} />
                         </div>
                       </div>
                     </Paper>
