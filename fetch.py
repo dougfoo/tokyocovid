@@ -50,7 +50,7 @@ def fetch(url, prefix, dateIndex, dateFmt) -> bool:
             print(f'lastDateStr: {lastDateStr}')
             lastDate = datetime.datetime.strptime(lastDateStr, dateFmt)
             if (lastDate < today):
-                print("internal file check, still not updated w/ latest date")
+                print(" ! internal file check, still not updated w/ latest date")
                 os.remove('.tmpfile')
                 return False
             else:
@@ -63,24 +63,27 @@ def fetch(url, prefix, dateIndex, dateFmt) -> bool:
                 os.rename('.tmpfile', latest_file)
                 return True
         else:
-            print('server file old, retry later')
+            print(' ! server file old, retry later')
             return False
 
-def fetch_loop(tries, sec, url, prefix, dateIndex, dateFmt):
+def fetch_loop(tries, sec, url, prefix, dateIndex, dateFmt) -> (str, bool):
     print(f'fetching {url} to {prefix}')
     for i in range(tries):
         print(f"-->{i}th fetch looping {tries} x {sec} sec")
         res = fetch(url,prefix,dateIndex, dateFmt)
         if (res == True):
-            print("completed!")
-            return
+            print("* completed *!")
+            return (prefix, True)
         else:
             time.sleep(sec)
-    print(f"failed end")
+    print(f"  !! ** failed fetch_loop {prefix}")
+    return (prefix, False)
 
 num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 sec = int(sys.argv[2]) if len(sys.argv) > 2 else 1
 
+summary = []
 for tup in fetches:
-    fetch_loop(num, sec, *tup)
+    summary.append(fetch_loop(num, sec, *tup))
 
+print('\n',summary)
