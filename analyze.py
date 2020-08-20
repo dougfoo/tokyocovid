@@ -77,7 +77,7 @@ data = pd.get_dummies(data, columns=["Gender","AgeGroup","Residence"])
 data = data.assign(ct=1)
 sumdata = data.groupby('Date').agg('sum')
 avg7d = sumdata.rolling(7).mean()
-print('rolling',avg7d)
+avg30d = sumdata.rolling(30).mean()
 
 print(sumdata.tail())	
 # print(sumdata.agg('sum')['ct'])
@@ -93,7 +93,9 @@ dailyData['JapanCase'] = int(japan['Cases'].agg('sum'))   # take ct then agg !
 dailyData['LastTokyoCase'] = int(sumdata.iloc[-2:,-1][0])
 dailyData['TokyoCaseChange'] = int(sumdata.iloc[-1:,-1][0]) - int(sumdata.iloc[-2:,-1][0])
 dailyData['TokyoCaseAvg7d'] = int(avg7d.iloc[-1:,-1][0])
+dailyData['TokyoCaseAvg30d'] = int(avg30d.iloc[-1:,-1][0])
 dailyData['TokyoCaseAvgDiff'] = int(sumdata.iloc[-1:,-1][0]) - int(avg7d.iloc[-1:,-1][0])
+dailyData['TokyoCaseAvg30dDiff'] = int(sumdata.iloc[-1:,-1][0]) - int(avg30d.iloc[-1:,-1][0])
 
 # dailyData['CallCenter'] = # https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_call_center.csv
 print(dailyData)
