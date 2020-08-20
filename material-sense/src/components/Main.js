@@ -155,7 +155,8 @@ class Main extends Component {
                       New Cases Tokyo
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                    {this.state.dailyData['NewTokyoCase']} +/- ?
+                    {this.state.dailyData['NewTokyoCase']} &nbsp; {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '-' } {this.state.dailyData['TokyoCaseChange']} <br/>
+                    Wk Avg: {this.state.dailyData['TokyoCaseAvg7d']} &nbsp; {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '-'} {this.state.dailyData['TokyoCaseAvgDiff']} <br/>
                     </Typography>
                   </div>
                 </Paper>

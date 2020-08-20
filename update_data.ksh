@@ -1,5 +1,4 @@
-#!/bin/ksh
-
+#!/bin/bash
 
 cd ~/git/tokyocovid/data/
 aws s3 cp dailyTrend.json s3://tokyocovid.foostack.org/
