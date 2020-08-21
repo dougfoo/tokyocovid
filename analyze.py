@@ -94,8 +94,8 @@ dailyData['LastTokyoCase'] = int(sumdata.iloc[-2:,-1][0])
 dailyData['TokyoCaseChange'] = int(sumdata.iloc[-1:,-1][0]) - int(sumdata.iloc[-2:,-1][0])
 dailyData['TokyoCaseAvg7d'] = int(avg7d.iloc[-1:,-1][0])
 dailyData['TokyoCaseAvg30d'] = int(avg30d.iloc[-1:,-1][0])
-dailyData['TokyoCaseAvgDiff'] = int(sumdata.iloc[-1:,-1][0]) - int(avg7d.iloc[-1:,-1][0])
-dailyData['TokyoCaseAvg30dDiff'] = int(sumdata.iloc[-1:,-1][0]) - int(avg30d.iloc[-1:,-1][0])
+dailyData['TokyoCaseAvgDiff'] = int(avg7d.iloc[-1:,-1][0]) - int(avg7d.iloc[-2:,-1][0])
+dailyData['TokyoCaseAvg30dDiff'] = int(avg30d.iloc[-1:,-1][0]) - int(avg30d.iloc[-2:,-1][0])
 
 # dailyData['CallCenter'] = # https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_call_center.csv
 print(dailyData)

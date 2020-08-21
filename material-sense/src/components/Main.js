@@ -154,9 +154,26 @@ class Main extends Component {
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
                       New Cases Tokyo
                     </Typography>
-                    <Typography variant="body2" gutterBottom>
-                    {this.state.dailyData['NewTokyoCase']} &nbsp; {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '-' } {this.state.dailyData['TokyoCaseChange']} <br/>
-                    Wk Avg: {this.state.dailyData['TokyoCaseAvg7d']} &nbsp; {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '-'} {this.state.dailyData['TokyoCaseAvgDiff']} <br/>
+                    <Typography variant="body2" display="inline">
+                     {this.state.dailyData['NewTokyoCase']} &nbsp; 
+                    </Typography>
+                    <Typography variant="body2" color="error" display="inline">
+                    {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '-' } {this.state.dailyData['TokyoCaseChange']} <br/>
+                    </Typography>
+                  </div>
+                </Paper>
+              </Grid>
+              <Grid item xs={4} md={2}>
+                <Paper className={classes.paper}>
+                  <div className={classes.box}>
+                    <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
+                      7 Day Avg Tokyo
+                    </Typography>
+                    <Typography variant="body2" gutterBottom display="inline">
+                      {this.state.dailyData['TokyoCaseAvg7d']} &nbsp; 
+                    </Typography>
+                    <Typography variant="body2" color="error" display="inline">
+                      {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '-'} {this.state.dailyData['TokyoCaseAvgDiff']} <br/>
                     </Typography>
                   </div>
                 </Paper>
