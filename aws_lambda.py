@@ -1,6 +1,7 @@
 import json
 import boto3
-from botocore.vendored import requests as req
+#from botocore.vendored import requests as req
+import requests as req  # install arn:aws:lambda:ap-northeast-1:113088814899:layer:Klayers-python37-requests:14	to enable
 import pandas as pd
 import datetime
 import os
@@ -168,3 +169,4 @@ def analyzeAndSave(tokyo, japan, call):
 
     s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyTrend.json', Body=dt, ACL='public-read-write')
 
+lambda_handler(None, None)   
