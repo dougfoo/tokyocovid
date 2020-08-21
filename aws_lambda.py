@@ -1,60 +1,170 @@
 import json
 import boto3
 from botocore.vendored import requests as req
+import pandas as pd
 import datetime
 import os
 import sys
 import time
 
-def lambda_handler(event, context):
-    bucket_name = "tokyocovidpublic"
-    file_name = f"{str(datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S'))}.txt"
-    s3_path = "data/" + file_name
-    s3 = boto3.resource("s3")
-    
-    (res, body) = fetch()
-    if (res == True):
-#        encoded_string = string.encode("utf-8")
-        s3.Bucket(bucket_name).put_object(Key=s3_path, Body=body, ACL='public-read-write')
+TKCOVID_CASE_URL = 'https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv'
+TKCOVID_CALL_URL = 'https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_call_center.csv'
+#JAPANCOVID_DEATH_URL = 'https://www.mhlw.go.jp/content/death_total.csv'
+JAPANCOVID_CASE_URL = 'https://www.mhlw.go.jp/content/pcr_positive_daily.csv'
+
+TKCOVID_CASE_PREFIX =  "data/tokyocovid"
+TKCOVID_CALL_PREFIX =  "data/tokyocovidcall"
+JAPANCOVID_CASE_PREFIX =  "data/japancovid"
+
+BUCKET_NAME = "tokyocovid.foostack.org"
+
+
+fetches = {
+    TKCOVID_CASE_PREFIX: (TKCOVID_CASE_URL, TKCOVID_CASE_PREFIX, 4, '%Y-%m-%d'),
+    TKCOVID_CALL_PREFIX: (TKCOVID_CALL_URL, TKCOVID_CALL_PREFIX, 3, '%Y-%m-%d'),
+    JAPANCOVID_CASE_PREFIX: (JAPANCOVID_CASE_URL, JAPANCOVID_CASE_PREFIX,  0, '%Y/%m/%d'),
+}
+
+def lambda_handler(event, context):    
+    results = []
+    run_analyze = False
+
+    (tkState, tokyoData) = fetch(*fetches[TKCOVID_CASE_PREFIX])
+    if (tkState == True):
+        (tkcallState, callData) = fetch(*fetches[TKCOVID_CALL_PREFIX])
+        (japanState, japanData) = fetch(*fetches[JAPANCOVID_CASE_PREFIX])
+
+        analyzeAndSave(tokyoData, japanData, callData)
+        print(tkState, tkcallState, japanState)
         return {
             'statusCode': 200,
-            'body': json.dumps(f'New File fetched and saved {s3_path}!')
+            'body': json.dumps('Succeeded')
         }
     else:
         return {
             'statusCode': 304,
-            'body': json.dumps('Pending new file for the day!')
+            'body': json.dumps('Failed')
         }
-        
 
 
-def fetch() -> (bool, str):
-    res = req.request(method='HEAD', url='https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv')
-    if (res.ok):
-        now = datetime.datetime.utcnow()
-        print(f'OK response @run time: {str(now)} GMT')
+ 
+def fetch(url, prefix, dateIndex, dateFmt) -> (bool, str):
+    now = datetime.datetime.utcnow()    
+    today = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
-        dateStr = res.headers['Date']   # Thu, 13 Aug 2020 07:43:48 GMT
-        reqDateObj = datetime.datetime.strptime(dateStr, '%a, %d %b %Y %H:%M:%S %Z')
+    res = req.request(method='GET', url=url)
+    print(res.headers)
 
-        print(f'head date of file: {str(reqDateObj)} GMT')
-        
-        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    contents = res.text
+    lastDateStr = contents.split('\n')[-5].split(',')[dateIndex]  # random back 5 rows
+    print(f'lastDateStr {lastDateStr}')
 
-        if (reqDateObj > today):  # updated > GMT 00 (8am TK) then take, otherwise retry
-            print('true download now')
-            res = req.request(method='GET', url='https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv')
-            contents = res.text
-            lastDateStr = contents.split('\n')[-5].split(',')[4]  # random back 5 rows
-            print(f'lastDateStr {lastDateStr}')
-            
-            lastDate = datetime.datetime.strptime(lastDateStr, '%Y-%m-%d')
-            if (lastDate < today):
-                print("internal file check, still not updated w/ latest date")
-                return (False, None)
-            else:
-                return (True, contents)
-        else:
-            print('false retry later')
-            return (False, None)
-            
+    lastDate = datetime.datetime.strptime(lastDateStr, dateFmt)
+    if (lastDate < today):
+        print(" ! internal file check, still not updated w/ latest date")
+        return (False, contents)
+    else:
+        return (True, contents)
+
+def analyzeAndSave(tokyo, japan, call):        
+    '''
+    output formats
+        # demoData.json (7 day avg ?)
+        const demoData = [
+        { name: 'M/F', m: 4000, f: 2400, },
+        { name: 'Age <> 40', yg: 3000, old: 1398, },
+        { name: 'Tokyo / Ex', tk: 2000, ex:
+        9800, },
+        ];
+
+        # dailyTrend.json (30 days?)
+        const dailyTrend = [
+        { name: 'Aug 12', tk: 330, os: 140, },
+        { name: 'Aug 13', tk: 210, os: 180, },
+        { name: 'Aug 14', tk: 150, os: 150, },
+        { name: 'Aug 15', tk: 288, os: 190, },
+        { name: 'Yesterday', tk: 313, os: 139, },
+        { name: 'Today', tk: 188, os: 198, },
+        ];
+
+        # dailyData.json (just latest)
+        const dailyData = 
+        { 
+            'NewTokyoCase': 315,
+            'TokyoCase': 1525,
+            'NewJapanCase': 1231,
+            'JapanCase': 51242,
+            'LastTokyoCase': 333,
+            'TokyoCaseChange': 18,
+            'TokyoCaseAvg7d': 300,
+            'TokyoCaseAvgDiff': 15
+        };    
+
+    '''
+
+    import io
+    # tokyo = pd.read_csv(TKCOVID_CASE_PREFIX+'_latest.csv')
+    # # call = pd.read_csv(TKCOVID_CALL_PREFIX+'_latest.csv')
+    # japan = pd.read_csv(JAPANCOVID_CASE_PREFIX+'_latest.csv')
+    tokyo = pd.read_csv(io.StringIO(tokyo)).rename(	
+        columns={	
+            '全国地方公共団体コード':'Code',	
+            '都道府県名':'Prefecture',	
+            '市区町村名':'Prefecture2',	
+            '公表_年月日':'Date',	
+            '曜日':'DoW',	
+            '発症_年月日':'OnsetDate',	
+            '患者_居住地':'Residence',	
+            '患者_年代':'AgeGroup',	
+            '患者_性別':'Gender',	
+            '患者_属性':'Attribute',	
+            '患者_状態':'Status',	
+            '患者_症状':'Symptom',	
+            '患者_渡航歴の有無フラグ':'TravelFlag',	
+            '備考':'Remarks',	
+            '退院済フラグ':'Discharged'	
+        })	
+    japan = pd.read_csv(io.StringIO(japan))
+    japan.columns = ['Date','Cases']
+    print(japan.tail())	
+
+
+    # group by counts	
+    tokyo = tokyo[['Date','Gender','AgeGroup','Residence']]	
+    print(tokyo.tail())	
+
+    tokyo = pd.get_dummies(tokyo, columns=["Gender","AgeGroup","Residence"])	
+    tokyo = tokyo.assign(ct=1)
+    sumtokyo = tokyo.groupby('Date').agg('sum')
+    avg7d = sumtokyo.rolling(7).mean()
+    avg30d = sumtokyo.rolling(30).mean()
+
+    print(sumtokyo.tail())	
+
+    dailyData = {}
+    dailyData['NewTokyoCase'] = int(sumtokyo.iloc[-1:,-1][0])  # here we get final row and a few cols
+    dailyData['NewJapanCase'] = int(japan.iloc[-1,-1])      # note -1,-1 gets cell
+    dailyData['TokyoCase'] = int(sumtokyo.agg('sum')['ct'])    # agg then take ct
+    dailyData['JapanCase'] = int(japan['Cases'].agg('sum'))   # take ct then agg !
+    dailyData['LastTokyoCase'] = int(sumtokyo.iloc[-2:,-1][0])
+    dailyData['TokyoCaseChange'] = int(sumtokyo.iloc[-1:,-1][0]) - int(sumtokyo.iloc[-2:,-1][0])
+    dailyData['TokyoCaseAvg7d'] = int(avg7d.iloc[-1:,-1][0])
+    dailyData['TokyoCaseAvg30d'] = int(avg30d.iloc[-1:,-1][0])
+    dailyData['TokyoCaseAvgDiff'] = int(avg7d.iloc[-1:,-1][0]) - int(avg7d.iloc[-2:,-1][0])
+    dailyData['TokyoCaseAvg30dDiff'] = int(avg30d.iloc[-1:,-1][0]) - int(avg30d.iloc[-2:,-1][0])
+
+    # dailyData['CallCenter'] = # https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_call_center.csv
+    # print(dailyData)
+    import json
+    dd = json.dumps(dailyData)
+    s3 = boto3.resource("s3")
+    s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyData.json', Body=dd, ACL='public-read-write')
+
+    dailyTrend = sumtokyo['ct']
+    dailyTrend.index.name = "name"
+    dailyTrend.name = "tok"
+    print(dailyTrend.tail())
+    dt = dailyTrend.reset_index().to_json(orient="records")
+
+    s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyTrend.json', Body=dt, ACL='public-read-write')
+

@@ -117,13 +117,13 @@ class Main extends Component {
   };
 
   componentDidMount() {
-    fetch("dailyData.json")
+    fetch("data/dailyData.json")
     .then(res => res.json())
     .then(data => {
       console.log(data);
       this.setState({ ...this.state, dailyData: data })
     });
-    fetch("dailyTrend.json")
+    fetch("data/dailyTrend.json")
     .then(res => res.json())
     .then(data => {
       console.log(data);
