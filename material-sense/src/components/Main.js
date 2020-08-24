@@ -10,7 +10,7 @@ import Topbar from "./Topbar";
 import SimpleReactiveChart from "./SimpleReactiveChart";
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  PieChart, Pie, Sector, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 
 const backgroundShape = require("../images/shape.svg");
@@ -97,6 +97,7 @@ class Main extends Component {
     learnMoredialog: false,
     getStartedDialog: false,
     dailyData: [],
+    dailyDemo: [],
     dailyTrend: []
   };
 
@@ -129,17 +130,31 @@ class Main extends Component {
       console.log(data);
       this.setState({ ...this.state, dailyTrend: data })
     });
-
+    fetch("data/dailyDemo.json")
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      this.setState({ ...this.state, dailyDemo: data })
+    });
   }
 
   render() {
-    const demoData = [
-      { name: 'M/F', m: 4000, f: 2400, },
-      { name: 'Age <> 40', yg: 3000, old: 1398, },
-      { name: 'Tokyo / Ex', tk: 2000, ex:
-       9800, },
-    ];
-
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    const RADIAN = Math.PI / 180;
+    const renderCustomizedLabel = ({
+      cx, cy, midAngle, innerRadius, outerRadius, percent, index,
+    }) => {
+      const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  
+      return (
+        <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+          {`${(percent * 100).toFixed(0)}%`}
+        </text>
+      );
+    };
+  
     const { classes } = this.props;
     return (
       <React.Fragment>
@@ -228,50 +243,63 @@ class Main extends Component {
                 </Paper>
               </Grid>
               <Grid container item xs={12}>
-                <Grid spacing={4} alignItems="center" justify="center" container className={classes.grid}>
-                  <Grid item xs={12}>
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>
+                    <div>
+                      <div className={classes.box}>
+                        <Typography color="secondary" gutterBottom>
+                          Daily New Case Counts
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                          (Tokyo tk, Osaka os)
+                        </Typography>
+                      </div>
+                      <div>
+                        <ResponsiveContainer width="99%" height={225}>
+                          <LineChart width={600} height={300} data={this.state.dailyTrend}
+                            margin={{
+                              top: 5, right: 5, left: 5, bottom: 5,
+                            }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="tok" stroke="#8884d8" activeDot={{ r: 8 }} />
+                          </LineChart>                            
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+                  </Paper>
+                </Grid>
+              </Grid>
+              <Grid container item xs={12}>
+                <Grid spacing={2} alignItems="center" justify="center" container className={classes.grid}>
+                  <Grid item xs={6}>
                     <Paper className={classes.paper}>
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                            Daily New Case Counts
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                            (Tokyo tk, Osaka os)
+                            Tokyo Daily Breakdown (by Gender)
                           </Typography>
                         </div>
                         <div>
-                          <ResponsiveContainer width="99%" height={225}>
-                            <LineChart width={600} height={300} data={this.state.dailyTrend}
-                              margin={{
-                                top: 5, right: 5, left: 5, bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid strokeDasharray="3 3" />
-                              <XAxis dataKey="name" />
-                              <YAxis />
-                              <Tooltip />
-                              <Legend />
-                              <Line type="monotone" dataKey="tok" stroke="#8884d8" activeDot={{ r: 8 }} />
-                            </LineChart>                            
-                          </ResponsiveContainer>
+                          <SimpleReactiveChart data={this.state.dailyDemo.slice(0,2)} />
                         </div>
                       </div>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={6}>
                     <Paper className={classes.paper}>
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                            Demographics (WIP)
-                          </Typography>
-                          <Typography variant="body1" gutterBottom>
-                          Gender, Age, Tokyo vs Japan
+                          Tokyo Daily Breakdown (by Age)
                           </Typography>
                         </div>
                         <div>
-                          <SimpleReactiveChart data={demoData} />
+                          <SimpleReactiveChart data={this.state.dailyDemo.slice(2,12)} />
                         </div>
                       </div>
                     </Paper>

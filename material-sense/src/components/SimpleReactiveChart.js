@@ -1,32 +1,47 @@
 import React from 'react';
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {PieChart, Pie, Sector, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import { withTheme } from '@material-ui/styles';
 
 function SimpleReactiveChart(props) {
   const { data } = props;
+  
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({
+    cx, cy, midAngle, innerRadius, outerRadius, percent, index,
+  }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
+  const jsfiddleUrl = 'https://jsfiddle.net/alidingling/c9pL8k61/';
+
   return (
-    <ResponsiveContainer width="99%" height={225}>
-     <BarChart
-        width={500}
-        height={300}
-        data={data}
-        margin={{
-          top: 5, right: 30, left: 20, bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
+    <ResponsiveContainer width="99%" height={425}>
+      <PieChart width={400} height={400}>
+        <Pie
+          data={data}
+          labelLine={false}
+          label={renderCustomizedLabel}
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {
+            data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+          }
+        </Pie>
         <Tooltip />
         <Legend />
-        <Bar dataKey="m" fill="#8884d8" />
-        <Bar dataKey="f" fill="#82ca9d" />
-        <Bar dataKey="yg" fill="#0804d8" />
-        <Bar dataKey="old" fill="#028a9d" />
-        <Bar dataKey="tk" fill="#888408" />
-        <Bar dataKey="ex" fill="#82ca0d" />
-      </BarChart>
+      </PieChart>
     </ResponsiveContainer>
   );
 }

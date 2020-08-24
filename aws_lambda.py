@@ -19,7 +19,6 @@ JAPANCOVID_CASE_PREFIX =  "data/japancovid"
 
 BUCKET_NAME = "tokyocovid.foostack.org"
 
-
 fetches = {
     TKCOVID_CASE_PREFIX: (TKCOVID_CASE_URL, TKCOVID_CASE_PREFIX, 4, '%Y-%m-%d'),
     TKCOVID_CALL_PREFIX: (TKCOVID_CALL_URL, TKCOVID_CALL_PREFIX, 3, '%Y-%m-%d'),
@@ -46,8 +45,6 @@ def lambda_handler(event, context):
             'statusCode': 304,
             'body': json.dumps('Failed')
         }
-
-
  
 def fetch(url, prefix, dateIndex, dateFmt) -> (bool, str):
     now = datetime.datetime.utcnow()    
@@ -67,7 +64,7 @@ def fetch(url, prefix, dateIndex, dateFmt) -> (bool, str):
     else:
         return (True, contents)
 
-def analyzeAndSave(tokyo, japan, call):        
+def analyzeAndSave(tokyo, japan, call, local=False):        
     '''
     output formats
         # demoData.json (7 day avg ?)
@@ -116,7 +113,7 @@ def analyzeAndSave(tokyo, japan, call):
             '曜日':'DoW',	
             '発症_年月日':'OnsetDate',	
             '患者_居住地':'Residence',	
-            '患者_年代':'AgeGroup',	
+            '患者_年代':'Age',	
             '患者_性別':'Gender',	
             '患者_属性':'Attribute',	
             '患者_状態':'Status',	
@@ -129,18 +126,35 @@ def analyzeAndSave(tokyo, japan, call):
     japan.columns = ['Date','Cases']
     print(japan.tail())	
 
-
     # group by counts	
-    tokyo = tokyo[['Date','Gender','AgeGroup','Residence']]	
+    tokyoBase = tokyo[['Date','Gender','Age']]	
     print(tokyo.tail())	
 
-    tokyo = pd.get_dummies(tokyo, columns=["Gender","AgeGroup","Residence"])	
-    tokyo = tokyo.assign(ct=1)
-    sumtokyo = tokyo.groupby('Date').agg('sum')
+    tokyoBase = pd.get_dummies(tokyoBase, columns=["Gender","Age"])	
+    tokyoBase = tokyoBase.assign(ct=1)
+    sumtokyo = tokyoBase.groupby('Date').agg('sum')
     avg7d = sumtokyo.rolling(7).mean()
     avg30d = sumtokyo.rolling(30).mean()
-
     print(sumtokyo.tail())	
+
+    # gender age groups
+    tokyoDemo = tokyo.copy()[['Date','Gender','Age']]
+    tokyoDemo['Gender'] = tokyoDemo['Gender'].replace({'男性':'M', '女性':'F'})
+    tokyoDemo['Age'] = tokyoDemo['Age'].str.replace('[^a-zA-Z0-9]', '')
+    tokyoDemo['Age'] = tokyoDemo['Age'].str.replace('\W', '')
+
+    tokyoDemo = pd.get_dummies(tokyoDemo, columns=["Gender","Age"])	
+    tokyoDemo = tokyoDemo.drop(columns = ['Gender_不明','Gender_―','Gender_-','Age_'])
+
+    tokyoDemoAgg = tokyoDemo.groupby('Date').sum()
+    tokyoDemoAgg = tokyoDemoAgg.iloc[-1].T.reset_index()
+    tokyoDemoAgg.columns=['name','value']
+
+    if (local):
+        tokyoDemoAgg.to_json('data/dailyDemo.json', orient='records')
+    else:
+        s3 = boto3.resource("s3")
+        s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyDemo.json', Body=tokyoDemoAgg.to_json(orient='records'), ACL='public-read-write')
 
     dailyData = {}
     dailyData['NewTokyoCase'] = int(sumtokyo.iloc[-1:,-1][0])  # here we get final row and a few cols
@@ -156,17 +170,20 @@ def analyzeAndSave(tokyo, japan, call):
 
     # dailyData['CallCenter'] = # https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_call_center.csv
     # print(dailyData)
-    import json
     dd = json.dumps(dailyData)
-    s3 = boto3.resource("s3")
-    s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyData.json', Body=dd, ACL='public-read-write')
+    if (local):
+        with open('data/dailyData.json', 'w') as fp:
+            json.dump(dailyData, fp)
+    else:
+        s3 = boto3.resource("s3")
+        s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyData.json', Body=dd, ACL='public-read-write')
 
     dailyTrend = sumtokyo['ct']
     dailyTrend.index.name = "name"
     dailyTrend.name = "tok"
     print(dailyTrend.tail())
-    dt = dailyTrend.reset_index().to_json(orient="records")
-
-    s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyTrend.json', Body=dt, ACL='public-read-write')
-
-lambda_handler(None, None)   
+    if (local):
+        dailyTrend.reset_index().to_json('data/dailyTrend.json', orient="records")
+    else:
+        s3 = boto3.resource("s3")
+        s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyTrend.json', Body=dailyTrend.reset_index().to_json(orient="records"), ACL='public-read-write')
