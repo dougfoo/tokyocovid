@@ -25,8 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "echo deploying",
+    "proedeploy": "npm run build",
+    "deploy": "bash -x deploy.sh",
     "postinstall": "opencollective-postinstall || true"
   },
   "eslintConfig": {
