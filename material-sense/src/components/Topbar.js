@@ -116,10 +116,10 @@ class Topbar extends Component {
             <Grid item xs={12} className={classes.flex}>
               <div className={classes.inline}>
                 <Typography variant="h6" color="inherit" noWrap>
-                  <Link to="/" className={classes.link}>
+                  <a href="http//foostack.ai" className={classes.link}>
                     <img width={20} src={logo} alt="" />
                     <span className={classes.tagline}>FooStack.Ai</span>
-                  </Link>
+                  </a>
                 </Typography>
               </div>
               {!this.props.noTabs && (
