@@ -27,7 +27,7 @@ const styles = theme => ({
   },
   grid: {
     width: 1200,
-    marginTop: 40,
+    marginTop: 5,
     [theme.breakpoints.down("sm")]: {
       width: "calc(100% - 20px)"
     }
@@ -65,7 +65,7 @@ const styles = theme => ({
     padding: theme.spacing(2)
   },
   box: {
-    marginBottom: 40,
+    marginBottom: 15,
     height: 65
   },
   inlining: {
@@ -209,7 +209,7 @@ class Main extends Component {
                 <Paper className={classes.paper}>
                   <div className={classes.box}>
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                    Japan Total Cases
+                    Japan Cases
                     </Typography>
                     <Typography variant="body2" gutterBottom display="inline">
                      {this.state.dailyData['JapanCase']} &nbsp; 
@@ -227,8 +227,7 @@ class Main extends Component {
                     Death Watch
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      New: TBA <br/>
-                      Total: TBA <br/>
+                    Coming Soon!<br/>
                     </Typography>
                   </div>
                 </Paper>
@@ -240,9 +239,6 @@ class Main extends Component {
                       <div className={classes.box}>
                         <Typography color="secondary" gutterBottom>
                           Daily New Case Counts
-                        </Typography>
-                        <Typography variant="body1" gutterBottom>
-                          (Tokyo tk, Osaka os)
                         </Typography>
                       </div>
                       <div>
@@ -266,14 +262,14 @@ class Main extends Component {
                   </Paper>
                 </Grid>
               </Grid>
-              <Grid container item xs={12}>
+              <Grid container justify="center">
                 <Grid spacing={2} alignItems="center" justify="center" container className={classes.grid}>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Paper className={classes.paper}>
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                            Tokyo Daily Breakdown (by Gender)
+                            Gender Breakdown (Tokyo Latest Day)
                           </Typography>
                         </div>
                         <div>
@@ -282,12 +278,12 @@ class Main extends Component {
                       </div>
                     </Paper>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Paper className={classes.paper}>
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                          Tokyo Daily Breakdown (by Age)
+                          Age Breakdown (Tokyo Latest Day)
                           </Typography>
                         </div>
                         <div>

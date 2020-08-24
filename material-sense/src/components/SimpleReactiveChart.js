@@ -26,15 +26,10 @@ function SimpleReactiveChart(props) {
   const jsfiddleUrl = 'https://jsfiddle.net/alidingling/c9pL8k61/';
 
   return (
-    <ResponsiveContainer width="99%" height={425}>
-      <PieChart width={400} height={400}>
-        <Pie
-          data={data}
-          labelLine={false}
-          label={renderCustomizedLabel}
-          fill="#8884d8"
-          dataKey="value"
-        >
+    <ResponsiveContainer height={375}>
+      <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
+        <Pie data={data} labelLine={false} label={renderCustomizedLabel}
+          fill="#8884d8" dataKey="value">
           {
             data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
           }
