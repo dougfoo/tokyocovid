@@ -180,7 +180,9 @@ def analyzeAndSave(tokyo, japan, call, local=False):
 
     dailyTrend = sumtokyo['ct']
     dailyTrend.index.name = "name"
-    dailyTrend.name = "tok"
+    dailyTrend.name = "Tokyo"
+    dailyTrend = dailyTrend.to_frame()
+    dailyTrend['7dayAvg'] = dailyTrend.rolling(7).mean()
     print(dailyTrend.tail())
     if (local):
         dailyTrend.reset_index().to_json('data/dailyTrend.json', orient="records")

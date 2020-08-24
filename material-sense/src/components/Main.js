@@ -173,7 +173,7 @@ class Main extends Component {
                      {this.state.dailyData['NewTokyoCase']} &nbsp; 
                     </Typography>
                     <Typography variant="body2" color="error" display="inline">
-                    {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '-' } {this.state.dailyData['TokyoCaseChange']} <br/>
+                    {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '' } {this.state.dailyData['TokyoCaseChange']} <br/>
                     </Typography>
                   </div>
                 </Paper>
@@ -188,7 +188,7 @@ class Main extends Component {
                       {this.state.dailyData['TokyoCaseAvg7d']} &nbsp; 
                     </Typography>
                     <Typography variant="body2" color="error" display="inline">
-                      {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : '-'} {this.state.dailyData['TokyoCaseAvgDiff']} <br/>
+                      {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : ''} {this.state.dailyData['TokyoCaseAvgDiff']} <br/>
                     </Typography>
                   </div>
                 </Paper>
@@ -211,20 +211,11 @@ class Main extends Component {
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
                     Japan Total Cases
                     </Typography>
-                    <Typography variant="body2" gutterBottom>
-                     {this.state.dailyData['JapanCase']} <br/>
-                    </Typography>
-                  </div>
-                </Paper>
-              </Grid>
-              <Grid item xs={4} md={2}>
-                <Paper className={classes.paper}>
-                  <div className={classes.box}>
-                    <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                    Japan Daily New Cases
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      {this.state.dailyData['NewJapanCase']} <br/>
+                    <Typography variant="body2" gutterBottom display="inline">
+                     {this.state.dailyData['JapanCase']} &nbsp; 
+                     </Typography>
+                     <Typography variant="body2" color="error" display="inline">
+                      + {this.state.dailyData['NewJapanCase']} <br/>
                     </Typography>
                   </div>
                 </Paper>
@@ -236,8 +227,8 @@ class Main extends Component {
                     Death Watch
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      New Deaths: TBA <br/>
-                      Total Deaths: TBA <br/>
+                      New: TBA <br/>
+                      Total: TBA <br/>
                     </Typography>
                   </div>
                 </Paper>
@@ -266,7 +257,8 @@ class Main extends Component {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Line type="monotone" dataKey="tok" stroke="#8884d8" activeDot={{ r: 8 }} />
+                            <Line type="monotone" dataKey="Tokyo" stroke="#8884d8" activeDot={{ r: 8 }} />
+                            <Line type="monotone" dataKey="7dayAvg" stroke="#ff3344" dot={false} activeDot={false} />
                           </LineChart>                            
                         </ResponsiveContainer>
                       </div>
@@ -304,22 +296,6 @@ class Main extends Component {
                       </div>
                     </Paper>
                   </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid container item xs={12}>
-              <Grid spacing={2} alignItems="center" justify="center" container className={classes.grid}>
-                <Grid item xs={12} md={8}>
-                  <Paper className={classes.paper}>
-                    <div className={classes.box}>
-                      <Typography style={{ textTransform: "uppercase" }} color="secondary" >
-                        Photo Library of My Dogs
-                      </Typography>
-                      <Button onClick={this.openDialog} variant="outlined" className={classes.actionButtom}>
-                        To Dogs
-                      </Button>
-                    </div>
-                  </Paper>
                 </Grid>
               </Grid>
             </Grid>

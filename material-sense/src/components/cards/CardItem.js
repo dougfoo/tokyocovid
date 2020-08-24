@@ -79,12 +79,16 @@ class CardItem extends Component {
             <div className={classes.baseline}>
               <div className={classes.inline}>
                 <Typography style={{ textTransform: 'uppercase' }} color='secondary' gutterBottom>
-                  Created by FooStack.Ai
+                  Created by <a href="http://foostack.ai">FooStack.Ai</a>
                 </Typography>
                 <Typography variant="h6" gutterBottom>
-                  Using Material-Sense (React template)
+                  Built with React.js + Material-Sense (React template)<br/>
+                  Hosted on AWS S3<br/>
+                  Updaed by AWS Lambda<br/>
+                  Using Python/Pandas<br/>
+                  Data from https://stopcovid19.metro.tokyo.lg.jp and https://www.mhlw.go.jp
                 </Typography>
-              </div>
+                </div>
             </div>
           </div>
         </Paper>
