@@ -269,7 +269,7 @@ class Main extends Component {
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                            Gender Breakdown (Tokyo Latest Day)
+                            Gender Breakdown Tokyo (vs -1 day)
                           </Typography>
                         </div>
                         <div>
@@ -283,7 +283,7 @@ class Main extends Component {
                       <div>
                         <div className={classes.box}>
                           <Typography color="secondary" gutterBottom>
-                          Age Breakdown (Tokyo Latest Day)
+                          Age Breakdown Tokyo (vs -1 day)
                           </Typography>
                         </div>
                         <div>
