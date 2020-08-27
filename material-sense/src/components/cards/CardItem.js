@@ -82,9 +82,9 @@ class CardItem extends Component {
                   Created by <a href="http://foostack.ai">FooStack.Ai</a>
                 </Typography>
                 <Typography variant="h6" gutterBottom>
-                  Built with React.js + Material-Sense (React template)<br/>
+                  Built with React.js + Material-Sense + ReChart<br/>
                   Hosted on AWS S3<br/>
-                  Updaed by AWS Lambda<br/>
+                  Data Driven by AWS Lambda<br/>
                   Using Python/Pandas<br/>
                   Data from https://stopcovid19.metro.tokyo.lg.jp and https://www.mhlw.go.jp
                 </Typography>
