@@ -167,7 +167,7 @@ class Main extends Component {
                 <Paper className={classes.paper}>
                   <div className={classes.box}>
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                      New Cases Tokyo
+                      New in Tokyo
                     </Typography>
                     <Typography variant="body2" display="inline">
                      {this.state.dailyData['NewTokyoCase']} &nbsp; 
@@ -182,13 +182,13 @@ class Main extends Component {
                 <Paper className={classes.paper}>
                   <div className={classes.box}>
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                      7 Day Avg Tokyo
+                      7 Day Avg TK
                     </Typography>
                     <Typography variant="body2" gutterBottom display="inline">
                       {this.state.dailyData['TokyoCaseAvg7d']} &nbsp; 
                     </Typography>
                     <Typography variant="body2" color="error" display="inline">
-                      {(this.state.dailyData['TokyoCaseChange'] > 0) ? '+' : ''} {this.state.dailyData['TokyoCaseAvgDiff']} <br/>
+                      {(this.state.dailyData['TokyoCaseAvgDiff'] > 0) ? '+' : ''} {this.state.dailyData['TokyoCaseAvgDiff']} <br/>
                     </Typography>
                   </div>
                 </Paper>
@@ -197,7 +197,7 @@ class Main extends Component {
                 <Paper className={classes.paper}>
                   <div className={classes.box}>
                     <Typography style={{ textTransform: "uppercase" }} color="secondary" gutterBottom>
-                    Total Open Tokyo
+                    Total Open TK
                     </Typography>
                     <Typography variant="body2" gutterBottom>
                     {this.state.dailyData['TokyoCase']}
@@ -250,7 +250,7 @@ class Main extends Component {
                           >
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
-                            <YAxis />
+                            <YAxis orientation="right"/>
                             <Tooltip />
                             <Legend />
                             <Line type="monotone" dataKey="Tokyo" stroke="#8884d8" activeDot={{ r: 8 }} />

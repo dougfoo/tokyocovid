@@ -18,7 +18,7 @@ function SimpleReactiveChart(props) {
 
     return (
       <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-        {`${(percent * 100).toFixed(0)}%`} {(data[index].value-data[index].value2 > 0) ? `+` : ` `} {`${(data[index].value-data[index].value2)}`}
+        {`${(percent * 100).toFixed(0)}%`} {(data[index].value2-data[index].value > 0) ? `+` : ` `} {`${(data[index].value2-data[index].value)}`}
       </text>
     );
   };
