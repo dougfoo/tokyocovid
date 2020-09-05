@@ -5,12 +5,11 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import Topbar from "./Topbar";
 import SimpleReactiveChart from "./SimpleReactiveChart";
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import {
-  PieChart, Pie, Sector, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 
 const backgroundShape = require("../images/shape.svg");
@@ -139,22 +138,6 @@ class Main extends Component {
   }
 
   render() {
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-    const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({
-      cx, cy, midAngle, innerRadius, outerRadius, percent, index,
-    }) => {
-      const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-      const x = cx + radius * Math.cos(-midAngle * RADIAN);
-      const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  
-      return (
-        <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-          {`${(percent * 100).toFixed(0)}%`}
-        </text>
-      );
-    };
-  
     const { classes } = this.props;
     return (
       <React.Fragment>
@@ -296,14 +279,6 @@ class Main extends Component {
               </Grid>
             </Grid>
           </Grid>
-          {/* <SwipeDialog
-            open={this.state.learnMoredialog}
-            onClose={this.dialogClose}
-          />
-          <InstructionDialog
-            open={this.state.getStartedDialog}
-            onClose={this.closeGetStartedDialog}
-          /> */}
         </div>
       </React.Fragment>
     );

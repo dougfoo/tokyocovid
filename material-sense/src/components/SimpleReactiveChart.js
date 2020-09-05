@@ -1,6 +1,6 @@
 import React from 'react';
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
-import {PieChart, Pie, Sector, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {PieChart, Pie,  Cell, Tooltip, Legend} from 'recharts';
 import { withTheme } from '@material-ui/styles';
 
 function SimpleReactiveChart(props) {
@@ -22,8 +22,6 @@ function SimpleReactiveChart(props) {
       </text>
     );
   };
-
-  const jsfiddleUrl = 'https://jsfiddle.net/alidingling/c9pL8k61/';
 
   return (
     <ResponsiveContainer height={375}>

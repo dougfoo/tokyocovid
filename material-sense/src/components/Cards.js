@@ -2,15 +2,15 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/styles/withStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import CardItem from "./cards/CardItem";
+import CardItem from "./CardItem";
 import Topbar from "./Topbar";
-import SectionHeader from "./typo/SectionHeader";
+import SectionHeader from "./SectionHeader";
 const backgroundShape = require("../images/shape.svg");
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.grey["A500"],
+    backgroundColor: theme.palette.grey["A500"], 
     overflow: "hidden",
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
