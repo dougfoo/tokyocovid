@@ -6,7 +6,8 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Topbar from "./Topbar";
-import SimpleReactiveChart from "./SimpleReactiveChart";
+import SimpleReactivePieChart from "./SimpleReactivePieChart";
+import SimpleReactiveBarChart from "./SimpleReactiveBarChart";
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import {
    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -256,7 +257,7 @@ class Main extends Component {
                           </Typography>
                         </div>
                         <div>
-                          <SimpleReactiveChart data={this.state.dailyDemo.slice(0,2)} />
+                          <SimpleReactivePieChart data={this.state.dailyDemo.slice(0,2)} />
                         </div>
                       </div>
                     </Paper>
@@ -270,7 +271,7 @@ class Main extends Component {
                           </Typography>
                         </div>
                         <div>
-                          <SimpleReactiveChart data={this.state.dailyDemo.slice(2,12)} />
+                          <SimpleReactiveBarChart data={this.state.dailyDemo.slice(2,12)} />
                         </div>
                       </div>
                     </Paper>

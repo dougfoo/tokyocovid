@@ -3,7 +3,7 @@ import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import {PieChart, Pie,  Cell, Tooltip, Legend} from 'recharts';
 import { withTheme } from '@material-ui/styles';
 
-function SimpleReactiveChart(props) {
+function SimpleReactivePieChart(props) {
   const { data } = props;
   
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -39,4 +39,4 @@ function SimpleReactiveChart(props) {
   );
 }
 
-export default withTheme(SimpleReactiveChart);
+export default withTheme(SimpleReactivePieChart);

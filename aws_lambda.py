@@ -144,16 +144,16 @@ def analyzeAndSave(tokyo, japan, call, local=False):
     tokyoDemo['Age'] = tokyoDemo['Age'].str.replace('\W', '')
 
     tokyoDemo = pd.get_dummies(tokyoDemo, columns=["Gender","Age"])	
-    tokyoDemo = tokyoDemo.drop(columns = ['Gender_不明','Gender_―','Gender_-','Age_'])
+    tokyoDemo = tokyoDemo.drop(columns = ['Gender_不明','Gender_―','Gender_-','Age_','Age_100'])
 
     tokyoDemoAgg = tokyoDemo.groupby('Date').sum()
     tokyoDemoAgg = tokyoDemoAgg.iloc[-2:].T.reset_index()
-    print(tokyoDemoAgg)
     tokyoDemoAgg.columns=['name','value','value2']
     # print(tokyoDemo.groupby('Date').sum().iloc[-2:-1])
     # print(tokyoDemo.groupby('Date').sum().iloc[-2:-1].T)
     # dayPrior = tokyoDemo.groupby('Date').sum().iloc[-2:-1].T
     # tokyoDemoAgg['value2'] = dayPrior
+
     print(tokyoDemoAgg)
 
     if (local):
