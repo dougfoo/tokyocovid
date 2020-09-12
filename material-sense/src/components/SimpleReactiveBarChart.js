@@ -14,8 +14,8 @@ function SimpleReactiveBarChart(props) {
         <XAxis dataKey="name"/>
         <Tooltip/>
         <Legend />
-        <Bar name="today" dataKey="value" fill="blue" />
-        <Bar name="yesterday" dataKey="value2" fill="red" />
+        <Bar name="yesterday" dataKey="value" fill="red" />
+        <Bar name="today" dataKey="value2" fill="blue" />
       </BarChart>
     </ResponsiveContainer>
   );
