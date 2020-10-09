@@ -9,6 +9,12 @@ import Topbar from "./Topbar";
 import SimpleReactivePieChart from "./SimpleReactivePieChart";
 import SimpleReactiveBarChart from "./SimpleReactiveBarChart";
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+
 import {
    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
@@ -96,9 +102,11 @@ class Main extends Component {
   state = {
     learnMoredialog: false,
     getStartedDialog: false,
+    chartscope: 'all',
     dailyData: [],
     dailyDemo: [],
-    dailyTrend: []
+    dailyTrend: [],
+    dailyTrendOrig: []
   };
 
   openDialog = event => {
@@ -117,6 +125,13 @@ class Main extends Component {
     this.setState({ getStartedDialog: false });
   };
 
+  handleChange = event => {
+    var v = event.target.value;
+    var newState = (v === 'all' ? this.state.dailyTrendOrig[0] : v === '2wk' ? this.state.dailyTrendOrig[2] : this.state.dailyTrendOrig[1]);
+    //var newState = this.state.dailyTrendOrig[2];
+    this.setState({ chartscope: v, dailyTrend: newState });
+  };
+
   componentDidMount() {
     fetch("data/dailyData.json")
     .then(res => res.json())
@@ -128,8 +143,8 @@ class Main extends Component {
     .then(res => res.json())
     .then(data => {
       console.log(data);
-      this.setState({ ...this.state, dailyTrend: data })
-    });
+      this.setState({ ...this.state, dailyTrend: data, dailyTrendOrig: [data, data.slice(Math.max(data.length - 60, 1)),data.slice(Math.max(data.length - 14, 1))]}) 
+      });
     fetch("data/dailyDemo.json")
     .then(res => res.json())
     .then(data => {
@@ -241,6 +256,14 @@ class Main extends Component {
                             <Line type="monotone" dataKey="7dayAvg" stroke="#ff3344" dot={false} activeDot={false} />
                           </LineChart>                            
                         </ResponsiveContainer>
+                        <FormControl component="fieldset">
+                          <FormLabel component="legend">Timeframe</FormLabel>
+                          <RadioGroup name="tf" value={this.state.chartscope} onChange={this.handleChange} row >
+                            <FormControlLabel value="all" control={<Radio />} label="All" />
+                            <FormControlLabel value="2mo" control={<Radio />} label="2 Month" />
+                            <FormControlLabel value="2wk" control={<Radio />} label="2 Weeks " />
+                          </RadioGroup>
+                        </FormControl>
                       </div>
                     </div>
                   </Paper>

@@ -6,16 +6,14 @@ import { withTheme } from '@material-ui/styles';
 function SimpleReactiveBarChart(props) {
   const { data } = props;
   
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
   return (
     <ResponsiveContainer height={375}>
       <BarChart data={data}>
         <XAxis dataKey="name"/>
         <Tooltip/>
         <Legend />
-        <Bar name="yesterday" dataKey="value" fill="red" />
-        <Bar name="today" dataKey="value2" fill="blue" />
+        <Bar name="yesterday" dataKey="value" fill="teal" />
+        <Bar name="today" dataKey="value2" fill="grey" />
       </BarChart>
     </ResponsiveContainer>
   );
