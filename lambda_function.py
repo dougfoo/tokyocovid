@@ -180,9 +180,25 @@ def analyzeAndSave(tokyo, japan, call, local=False):
     if (local):
         with open('data/dailyData.json', 'w') as fp:
             json.dump(dailyData, fp)
+        pub_slack(dailyData['NewTokyoCase'], dailyData['TokyoCaseAvg7d'], dailyData['TokyoCaseChange'])
     else:
         s3 = boto3.resource("s3")
+        response = s3.Object(bucket_name=BUCKET_NAME, key='data/dailyData.json').get()
+        ts = response['LastModified']
+        print('ts:'+str(ts) + str(type(ts)))
+        
+        from datetime import datetime, timedelta
+        timezone = ts.tzinfo
+
+        twoHourAgo = datetime.now(timezone) - timedelta(hours=2)
+        print('twoHourAgo: '+str(twoHourAgo) + ' vs ' + str(ts))
+        if (ts < twoHourAgo):
+            print('pub to slack')
+            pub_slack(dailyData['NewTokyoCase'], dailyData['TokyoCaseAvg7d'], dailyData['TokyoCaseChange'])
+
         s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyData.json', Body=dd, ACL='public-read-write')
+
+
 
     dailyTrend = sumtokyo['ct']
     dailyTrend.index.name = "name"
@@ -195,3 +211,24 @@ def analyzeAndSave(tokyo, japan, call, local=False):
     else:
         s3 = boto3.resource("s3")
         s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyTrend.json', Body=dailyTrend.reset_index().to_json(orient="records"), ACL='public-read-write')
+
+def pub_slack(tokyoNew, tokyoAvg, tokyoChange):
+    import urllib3 
+    import json
+    http = urllib3.PoolManager() 
+
+    url = "https://hooks.slack.com/services/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"
+    msg = {
+        "channel": "#coding",
+        "username": "TokyoCovidFooAWS",
+        "text": str(f"Hello Today's Automated COVID Tokyo Case Count is: {tokyoNew}, 7 day Avg {tokyoAvg}, daily change: {tokyoChange} \nhttp://tokyocovid.foostack.org "),
+        "icon_emoji": ""
+    }
+    
+    encoded_msg = json.dumps(msg).encode('utf-8')
+    resp = http.request('POST',url, body=encoded_msg)
+    print({
+        "message": "Response", 
+        "status_code": resp.status, 
+        "response": resp.data
+    })
