@@ -217,7 +217,7 @@ def pub_slack(tokyoNew, tokyoAvg, tokyoChange):
     import json
     http = urllib3.PoolManager() 
 
-    url = "https://hooks.slack.com/services/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"
+    url = os.environ.get('SLACK_URL')
     msg = {
         "channel": "#coding",
         "username": "TokyoCovidFooAWS",
