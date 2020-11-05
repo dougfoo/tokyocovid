@@ -37,13 +37,15 @@ def factorize(i):
         return factorize(d)+factorize(rem)
 
 
-commands = {'isPrime':isPrime,'nextPrime':nextPrime,'factorize':factorize, 'factors':factorize}
+commands = {'isprime':isPrime,'prime':isPrime,
+    'nextprime':nextPrime,'next':nextPrime,
+    'factorize':factorize,'factors':factorize}
 
 def lambda_handler(event, context):
     msg_map = dict(urlparse.parse_qsl(base64.b64decode(str(event['body'])).decode('ascii')))  # data comes b64 and also urlencoded name=value& pairs
     command = msg_map.get('command','nac')  # will be /foo
     params = msg_map.get('text','nat').split(" ")  # params ['isPrime','50']
-    subcommand = params[0]
+    subcommand = params[0].lower()
     if (len(params) < 2):
         response = f'available subcommands: {list(commands.keys())} + 1 parameter'
     elif (subcommand in commands.keys()):
@@ -64,5 +66,3 @@ def lambda_handler(event, context):
         ]
     }
    
-    
-
