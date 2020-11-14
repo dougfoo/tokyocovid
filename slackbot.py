@@ -2,9 +2,7 @@ import json
 from urllib import parse as urlparse
 import urllib.parse
 import base64
-from functools import lru_cache
 
-@lru_cache(maxsize=60)
 def isPrime(i):
     primes = {2,3}
     if (i in primes):
@@ -38,6 +36,7 @@ def factorize(i):
         rem = i // d
         return factorize(d)+factorize(rem)
 
+from functools import lru_cache
 @lru_cache(maxsize=60)
 def fib(n):
     if (n < 2):
@@ -49,7 +48,6 @@ commands = {'isprime':isPrime,'prime':isPrime,
     'nextprime':nextPrime,'next':nextPrime,
     'fib':fib,
     'factorize':factorize,'factors':factorize}
-
 
 def lambda_handler(event, context):
     msg_map = dict(urlparse.parse_qsl(base64.b64decode(str(event['body'])).decode('ascii')))  # data comes b64 and also urlencoded name=value& pairs
@@ -76,3 +74,4 @@ def lambda_handler(event, context):
         ]
     }
    
+    
