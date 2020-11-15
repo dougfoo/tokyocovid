@@ -21,6 +21,7 @@ JAPANCOVID_CASE_PREFIX =  "data/japancovid2"
 DAILY_DEMO_JSON = 'data/dailyDemo2.json'
 DAILY_DATA_JSON = 'data/dailyData2.json'
 DAILY_TREND_JSON = 'data/dailyTrend2.json'
+DAILY_TOKYO_TEMP = 'data/dailyDataTemp.json'
 
 BUCKET_NAME = "tokyocovid.foostack.org"
 
@@ -61,6 +62,10 @@ def fetch(url, prefix, dateIndex, dateFmt) -> (bool, str):
     contents = res.text
     lastDateStr = contents.split('\n')[-5].split(',')[dateIndex]  # random back 5 rows
     print(f'lastDateStr {lastDateStr}')
+
+# ## hack for test
+#     return (True, contents)
+# ## hack for test
 
     lastDate = datetime.datetime.strptime(lastDateStr, dateFmt)
     if (lastDate < today):
@@ -189,6 +194,9 @@ def analyzeAndSave(tokyo, japan, call, local=False):
     else:
         s3 = boto3.resource("s3")
         s3.Bucket(BUCKET_NAME).put_object(Key=DAILY_DATA_JSON, Body=dd, ACL='public-read-write')
+
+        body = '{ "today": 0 }'   # reset the preview 
+        s3.Bucket(BUCKET_NAME).put_object(Key=DAILY_TOKYO_TEMP, Body=body, ACL='public-read-write')
 
 
     dailyTrend = sumtokyo['ct']

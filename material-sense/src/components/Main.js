@@ -104,6 +104,7 @@ class Main extends Component {
     getStartedDialog: false,
     chartscope: 'all',
     dailyData: [],
+    dailyDataTemp: [],
     dailyDemo: [],
     dailyTrend: [],
     dailyTrendOrig: []
@@ -151,6 +152,12 @@ class Main extends Component {
       console.log(data);
       this.setState({ ...this.state, dailyDemo: data })
     });
+    fetch("data/dailyDataTemp.json")
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      this.setState({ ...this.state, dailyDataTemp: data })
+    });
   }
 
   render() {
@@ -162,6 +169,26 @@ class Main extends Component {
         <div className={classes.root}>
           <Grid container justify="center">
             <Grid spacing={2} alignItems="center" justify="center" container className={classes.grid}>
+              { this.state.dailyDataTemp['today'] > 0 ? 
+              <Grid item xs={4} md={2}>
+                <Paper className={classes.paper}>
+                  <div className={classes.box}>
+                    <Typography style={{ textTransform: "uppercase" }} color="error" gutterBottom>
+                      Tokyo Prelim
+                    </Typography>
+                    <Typography variant="body2" display="inline">
+                     {this.state.dailyDataTemp['today']} &nbsp; 
+                    </Typography>
+                    <Typography variant="body2" color="error" display="inline">
+                    {(this.state.dailyDataTemp['today'] - this.state.dailyData['NewTokyoCase'] > 0) ? '+' : '' } 
+                    {this.state.dailyDataTemp['today'] - this.state.dailyData['NewTokyoCase']} <br/>
+                    </Typography>
+                  </div>
+                </Paper>
+              </Grid>
+              :
+              ""
+              }
               <Grid item xs={4} md={2}>
                 <Paper className={classes.paper}>
                   <div className={classes.box}>

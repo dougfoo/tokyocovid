@@ -4,7 +4,7 @@ import urllib.parse
 import base64
 import boto3
 
-DAILY_TOKYO_TEMP = 'data/tempTokyoDaily.json'
+DAILY_TOKYO_TEMP = 'data/dailyDataTemp.json'
 BUCKET_NAME = "tokyocovid.foostack.org"
 
 def isPrime(i):
@@ -48,18 +48,20 @@ def fib(n):
     else:
         return fib(n-1) + fib(n-2)
 
+
 def add_covid(n):
     try: 
         int(n)
     except ValueError:
         return 'invalid input please enter number'
 
-    if (n < 10 OR n > 800):
+    if (n < 0 or n > 800):
         return 'invalid number range'
     # add covid data for website ...
     # write to s3 ?
     s3 = boto3.resource("s3")
-    s3.Bucket(BUCKET_NAME).put_object(Key=DAILY_TOKYO_TEMP, Body=n, ACL='public-read-write')
+    body = '{ "today": ' + str(n) + ' }'
+    s3.Bucket(BUCKET_NAME).put_object(Key=DAILY_TOKYO_TEMP, Body=body, ACL='public-read-write')
 
     return 'thanks!  added temp datapoint for today, please visit http://tokyocovid.foostack.org'
 
