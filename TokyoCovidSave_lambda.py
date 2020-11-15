@@ -14,13 +14,13 @@ TKCOVID_CASE_URL = 'https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covi
 #JAPANCOVID_DEATH_URL = 'https://www.mhlw.go.jp/content/death_total.csv'
 JAPANCOVID_CASE_URL = 'https://www.mhlw.go.jp/content/pcr_positive_daily.csv'
 
-TKCOVID_CASE_PREFIX =  "data/tokyocovid2"
-#TKCOVID_CALL_PREFIX =  "data/tokyocovidcall2"
-JAPANCOVID_CASE_PREFIX =  "data/japancovid2"
+TKCOVID_CASE_PREFIX =  "data/tokyocovid"
+#TKCOVID_CALL_PREFIX =  "data/tokyocovidcall"
+JAPANCOVID_CASE_PREFIX =  "data/japancovid"
 
-DAILY_DEMO_JSON = 'data/dailyDemo2.json'
-DAILY_DATA_JSON = 'data/dailyData2.json'
-DAILY_TREND_JSON = 'data/dailyTrend2.json'
+DAILY_DEMO_JSON = 'data/dailyDemo.json'
+DAILY_DATA_JSON = 'data/dailyData.json'
+DAILY_TREND_JSON = 'data/dailyTrend.json'
 DAILY_TOKYO_TEMP = 'data/dailyDataTemp.json'
 
 BUCKET_NAME = "tokyocovid.foostack.org"
