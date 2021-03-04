@@ -1,5 +1,5 @@
 # tokyocovid
-Master
+MasterRevert
 
 Some silly automation of tokyo covid data for AWS play
 
