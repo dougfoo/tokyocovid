@@ -6,9 +6,9 @@ import io
 import tweepy
 import tempfile
 
-DAILY_DEMO_JSON = 'data/dailyDemo2.json'
-DAILY_DATA_JSON = 'data/dailyData2.json'
-DAILY_TREND_JSON = 'data/dailyTrend2.json'
+DAILY_DEMO_JSON = 'data/dailyDemo.json'
+DAILY_DATA_JSON = 'data/dailyData.json'
+DAILY_TREND_JSON = 'data/dailyTrend.json'
 BUCKET_NAME = "tokyocovid.foostack.org"
 PLOT_FILE = 'data/chart.png'
 
