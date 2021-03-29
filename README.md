@@ -3,7 +3,12 @@
 Some silly automation of tokyo covid data for AWS play
 
 1. fetch on loop - fetch.py
-     https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv
+
+#
+#
+#
+
+https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv
 
 2. generate some basic metrics
      analyze.py run via AWS Lambda
