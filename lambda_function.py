@@ -16,6 +16,7 @@ JAPANCOVID_CASE_URL = 'https://www.mhlw.go.jp/content/pcr_positive_daily.csv'
 TKCOVID_CASE_PREFIX =  "data/tokyocovid"
 TKCOVID_CALL_PREFIX =  "data/tokyocovidcall"
 JAPANCOVID_CASE_PREFIX =  "data/japancovid"
+DAILY_TOKYO_TEMP = 'data/dailyDataTemp.json'
 
 BUCKET_NAME = "tokyocovid.foostack.org"
 
@@ -61,8 +62,7 @@ def fetch(url, prefix, dateIndex, dateFmt) -> (bool, str):
     if (lastDate < today):
         print(" ! internal file check, still not updated w/ latest date")
         return (False, contents)
-    else:
-        return (True, contents)
+    return (True, contents)
 
 def analyzeAndSave(tokyo, japan, call, local=False):        
     '''
@@ -123,7 +123,8 @@ def analyzeAndSave(tokyo, japan, call, local=False):
             '退院済フラグ':'Discharged'	
         })	
     japan = pd.read_csv(io.StringIO(japan))
-    japan.columns = ['Date','Cases']
+    japan.columns = ['Date','Cases','x','y']
+    japan = japan.drop(columns=['x','y'])
     print(japan.tail())	
 
     # group by counts	
@@ -144,7 +145,8 @@ def analyzeAndSave(tokyo, japan, call, local=False):
     tokyoDemo['Age'] = tokyoDemo['Age'].str.replace('\W', '')
 
     tokyoDemo = pd.get_dummies(tokyoDemo, columns=["Gender","Age"])	
-    tokyoDemo = tokyoDemo.drop(columns = ['Gender_不明','Gender_―','Gender_-','Age_','Age_100'])
+#    tokyoDemo = tokyoDemo.drop(columns = ['Gender_不明','Gender_―','Gender_-','Age_','Age_100'])
+    tokyoDemo = tokyoDemo.drop(columns = ['Gender_―','Gender_-','Age_','Age_100'])
 
     tokyoDemoAgg = tokyoDemo.groupby('Date').sum()
     tokyoDemoAgg = tokyoDemoAgg.iloc[-2:].T.reset_index()
@@ -197,6 +199,10 @@ def analyzeAndSave(tokyo, japan, call, local=False):
             pub_slack(dailyData['NewTokyoCase'], dailyData['TokyoCaseAvg7d'], dailyData['TokyoCaseChange'])
 
         s3.Bucket(BUCKET_NAME).put_object(Key='data/dailyData.json', Body=dd, ACL='public-read-write')
+    
+        # clear masumi hack
+        body = '{ "today": 0 }'   # reset the preview 
+        s3.Bucket(BUCKET_NAME).put_object(Key=DAILY_TOKYO_TEMP, Body=body, ACL='public-read-write')
 
 
 
