@@ -123,8 +123,11 @@ def analyzeAndSave(tokyo, japan, call, local=False):
             '退院済フラグ':'Discharged'	
         })	
     japan = pd.read_csv(io.StringIO(japan))
-    japan.columns = ['Date','Cases','x','y']
-    japan = japan.drop(columns=['x','y'])
+    if (len(japan.columns) == 4):
+        japan.columns = ['Date','Cases','x','y']
+        japan = japan.drop(columns=['x','y'])
+    else:
+        japan.columns = ['Date','Cases']
     print(japan.tail())	
 
     # group by counts	
