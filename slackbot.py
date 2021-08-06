@@ -57,8 +57,8 @@ def add_covid(n):
     except ValueError:
         return 'invalid input please enter number'
 
-    if (n < 0 or n > 4500):
-        return 'invalid number range'
+    if (n < 0 or n > 99999):
+        return 'invalid number range - keep mofos < 99999'
     s3 = boto3.resource("s3")
     body = '{ "today": ' + str(n) + ' }'
     s3.Bucket(BUCKET_NAME).put_object(Key=DAILY_TOKYO_TEMP, Body=body, ACL='public-read-write')
