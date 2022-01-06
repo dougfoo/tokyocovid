@@ -253,7 +253,7 @@ class Main extends Component {
                     Death Watch
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                    Coming Soon!<br/>
+                    Coming Feb'2022!<br/>
                     </Typography>
                   </div>
                 </Paper>
