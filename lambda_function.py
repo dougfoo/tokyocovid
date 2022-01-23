@@ -144,6 +144,8 @@ def analyzeAndSave(tokyo, japan, call, local=False):
     # gender age groups
     tokyoDemo = tokyo.copy()[['Date','Gender','Age']]
     tokyoDemo['Gender'] = tokyoDemo['Gender'].replace({'男性':'M', '女性':'F'})
+# split 0-9 and 10-19 below
+    tokyoDemo['Age'] = tokyoDemo['Age'].str.replace('10歳未満', '0代')
     tokyoDemo['Age'] = tokyoDemo['Age'].str.replace('[^a-zA-Z0-9]', '')
     tokyoDemo['Age'] = tokyoDemo['Age'].str.replace('\W', '')
 

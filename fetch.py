@@ -7,7 +7,7 @@ import os
 import sys
 import time
 
-TKCOVID_CALL_URL = 'https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_call_center.csv'
+#TKCOVID_CALL_URL = 'https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_call_center.csv'
 TKCOVID_CASE_URL = 'https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv'
 #JAPANCOVID_DEATH_URL = 'https://www.mhlw.go.jp/content/death_total.csv'
 JAPANCOVID_CASE_URL = 'https://www.mhlw.go.jp/content/pcr_positive_daily.csv'
@@ -17,7 +17,7 @@ TKCOVID_CALL_PREFIX =  "data/tokyocovidcall"
 JAPANCOVID_CASE_PREFIX =  "data/japancovid"
 
 fetches = [
-    (TKCOVID_CALL_URL, TKCOVID_CALL_PREFIX, 3, '%Y-%m-%d'),
+#    (TKCOVID_CALL_URL, TKCOVID_CALL_PREFIX, 3, '%Y-%m-%d'),
     (TKCOVID_CASE_URL, TKCOVID_CASE_PREFIX, 4, '%Y-%m-%d'),
     (JAPANCOVID_CASE_URL, JAPANCOVID_CASE_PREFIX, 0, '%Y/%m/%d')
 ]
